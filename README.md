@@ -83,7 +83,7 @@ Tu dois voir :
 
 ---
 
-## 📁 Structure du Projet
+##  Structure du Projet
 
 ```
 discord-agent/
