@@ -19,4 +19,4 @@ client.on('messageCreate', async (message) => {
   await message.reply(`Tu as tapé : ${message.content} — l'IA arrive bientôt !`)
 })
 
-client.login('MTQ4MjQwMjY3MzE1NTExNzEzNg.GtZIaA.LYx9J_6xEc-bJdjyfM3FFm52mPRG1kMtzoSwm4')
+client.login(process.env.DISCORD_TOKEN)
