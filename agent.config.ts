@@ -2,7 +2,8 @@ import { defineConfig } from "@botpress/runtime";
 
 export default defineConfig({
   name: "Izza",
-  description: "An AI agent built with Botpress ADK",
+  description: "AI Content Creator Coach",
+
   defaultModels: {
     autonomous: "cerebras:gpt-oss-120b",
     zai: "cerebras:gpt-oss-120b",
