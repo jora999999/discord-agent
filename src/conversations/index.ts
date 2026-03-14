@@ -22,12 +22,6 @@ export default new Conversation({
       return
     }
 
-    if (text.startsWith('/hook')) {
-      const sujet = text.replace('/hook', '').replace(/sujet:/i, '').trim() || 'contenu général'
-      await send(`Tu es CreatorFlow AI, expert accroches virales.\nSujet : "${sujet}"\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ HOOK_CRACKER.exe\n[■■■■■■■■■■] ANALYZING: "${sujet}"\n> 5 VIRAL HOOKS EXTRACTED ✓\n\`\`\`\n\n[01] ◈ SHOCK     → "[accroche]" | WHY: [raison]\n[02] ◈ CURIOSITY → "[accroche]" | WHY: [raison]\n[03] ◈ COUNTER   → "[accroche]" | WHY: [raison]\n[04] ◈ STORY     → "[accroche]" | WHY: [raison]\n[05] ◈ DATA      → "[accroche]" | WHY: [raison]\n\n\`\`\`\n> BEST TIKTOK : [numéro] | BEST YOUTUBE : [numéro]\n\`\`\`\n\nRéponds en français.`)
-      return
-    }
-
     if (text.startsWith('/roast')) {
       const idee = text.replace('/roast', '').trim() || 'une idée banale'
       await send(`Tu es CreatorFlow AI mode ROAST_SYSTEM.exe.\nIdée : "${idee}"\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ ROAST_SYSTEM.exe\n[■■■■■■■■■■] VULNERABILITIES FOUND ⚠️\n\`\`\`\n\n[ERR_01] [problème 1]\n[ERR_02] [problème 2]\n[ERR_03] [problème 3]\n\n\`\`\`\n> VERDICT: "[phrase drôle]"\n> SCORE  : [XX]/100 💀\n\`\`\`\n\n[PATCH_01] 💡 [idée améliorée]\n[PATCH_02] 💡 [angle unique]\n[PATCH_03] 💡 [idée originale]\n\n\`\`\`\n> RECOMMENDED : PATCH_[0X] | NEW SCORE : [XX]/100 ✅\n\`\`\`\n\nRéponds en français.`)
