@@ -120,26 +120,7 @@ discord-agent/
 > RECOMMENDED : PATCH_02 | NEW SCORE : 71/100 ✅
 ```
 
----
 
-## 📊 Business Model
-
-| Tier | Prix | Inclus |
-|---|---|---|
-| Free | 0€/mois | 5 commandes/jour |
-| Solo | 12€/mois | Illimité, 1 niche |
-| Team | 39€/mois | 5 membres, analytics |
-| Server | 99€/mois | Membres illimités |
-
-**Marché** : 50M+ créateurs de contenu actifs · 0 concurrent Discord-natif
-
----
-
-## 👥 Équipe
-
-Projet hackathon développé en 24h par une équipe de 3 personnes.
-
----
 
 ## ⚠️ Sécurité
 
