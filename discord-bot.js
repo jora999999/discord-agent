@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { Client, GatewayIntentBits } from 'discord.js'
 
 const client = new Client({
@@ -8,7 +11,7 @@ const client = new Client({
   ]
 })
 
-client.on('ready', () => {
+client.on('clientReady', () => {
   console.log(`✅ Bot connecté comme ${client.user.tag}`)
 })
 
