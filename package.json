@@ -9,7 +9,8 @@
     "deploy": "adk deploy"
   },
   "dependencies": {
-    "@botpress/runtime": "^1.16.6"
+    "@botpress/runtime": "^1.16.6",
+    "discord.js": "^14.25.1"
   },
   "devDependencies": {
     "typescript": "^5.9.3"
