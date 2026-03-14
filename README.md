@@ -1,10 +1,10 @@
-# ⚡ CreatorFlow AI — Discord Agent
+# CreatorFlow AI — Discord Agent
 
 > **Hackathon Project** — AI-powered content strategy coach for creators, built on Discord.
 
 ---
 
-## 🎯 Le Problème
+##  Le Problème
 
 Sur Reddit (r/NewTubers, r/TikTokCreators), des milliers de créateurs partagent la même frustration chaque semaine :
 
@@ -14,13 +14,13 @@ Les outils de création de contenu existent sur le web — mais les créateurs p
 
 ---
 
-## 💡 La Solution
+## La Solution
 
 **CreatorFlow AI** est un agent Discord qui génère des stratégies de contenu personnalisées en temps réel, grâce à l'IA Cerebras et aux données de tendances via Serper.
 
 ---
 
-## 🚀 Commandes
+## Commandes
 
 | Commande | Description | Exemple |
 |---|---|---|
@@ -32,19 +32,6 @@ Les outils de création de contenu existent sur le web — mais les créateurs p
 
 ---
 
-## 🏗️ Architecture
-
-```
-Utilisateur Discord
-        ↓
-discord-bot.js (discord.js)
-        ↓
-Cerebras API (llama3.1-8b)  ←  Serper API (Google Trends)
-        ↓
-Réponse style hacker/cyber dans Discord
-```
-
----
 
 ## ⚙️ Stack Technique
 
