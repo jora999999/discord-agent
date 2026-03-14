@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # my-agent
 
 A Botpress Agent built with the ADK.
