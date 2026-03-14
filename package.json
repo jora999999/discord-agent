@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "@botpress/runtime": "^1.16.6",
+<<<<<<< HEAD
     "discord.js": "^14.25.1",
     "dotenv": "^17.3.1"
+=======
+    "discord.js": "^14.25.1"
+>>>>>>> da22d1b
   },
   "devDependencies": {
     "typescript": "^5.9.3"
