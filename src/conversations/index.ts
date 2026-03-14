@@ -2,64 +2,227 @@ import { Conversation } from '@botpress/runtime'
 
 export default new Conversation({
   channel: '*',
-  handler: async ({ message, client }: any) => {
-    const text = message?.payload?.text?.trim() ?? ''
+  handler: async ({ message, client, execute }: any) => {
+    const text = message?.text?.trim() ?? message?.payload?.text?.trim() ?? ''
 
-    if (text.startsWith('/content')) {
-      const niche    = text.match(/niche:(\w+)/i)?.[1]    ?? 'général'
-      const platform = text.match(/platform:(\w+)/i)?.[1] ?? 'youtube'
+    const send = async (content: string) => {
       await client.createMessage({
         conversationId: message.conversationId,
         userId: message.userId,
+        type: 'text',
+        tags: {},
         payload: {
-          text: `Tu es CreatorFlow AI, style hacker/cyber.\nNiche : "${niche}" | Plateforme : ${platform}\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ CREATORFLOW_AI.exe\n[■■■■■■■■■■] SCANNING NICHE: ${niche.toUpperCase()}...\n> CONTENT MATRIX GENERATED ✓\n\`\`\`\n\n🗓️ CONTENT MATRIX — ${niche.toUpperCase()} × ${platform.toUpperCase()}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nSEMAINE 1\n📌 LUNDI\n  ⚡ TITRE : [titre ultra-spécifique]\n  🎯 HOOK  : [accroche qui arrête le scroll]\n  📡 FORMAT: [Short 60s / Reel / Long-form]\n\n📌 MERCREDI\n  ⚡ TITRE : [titre]\n  🎯 HOOK  : [accroche]\n  📡 FORMAT: [format]\n\n📌 VENDREDI\n  ⚡ TITRE : [titre]\n  🎯 HOOK  : [accroche]\n  📡 FORMAT: [format]\n\nSEMAINE 2\n[même structure]\n\n\`\`\`\n◈ HACK OF THE WEEK : [conseil ultra-spécifique pour ${niche}]\n\`\`\`\n\nRéponds en français. Ultra-concret.`
-        }
+          type: 'text',
+          text: content,
+        },
+      })
+    }
+
+    const normalizePlatform = (raw: string | undefined) => {
+      const value = (raw ?? '').trim().toLowerCase()
+
+      const aliases: Record<string, string> = {
+        instagram: 'Instagram',
+        instargram: 'Instagram',
+        insta: 'Instagram',
+
+        tiktok: 'TikTok',
+        'tik-tok': 'TikTok',
+        tiktokk: 'TikTok',
+        tt: 'TikTok',
+
+        youtube: 'YouTube',
+        yourube: 'YouTube',
+        youtuve: 'YouTube',
+        yt: 'YouTube',
+
+        linkedin: 'LinkedIn',
+        linkedln: 'LinkedIn',
+        linkdin: 'LinkedIn',
+      }
+
+      return aliases[value] ?? null
+    }
+
+    const normalizeNiche = (raw: string | undefined) => {
+      const value = (raw ?? '').trim()
+
+      if (!value) return null
+      if (value.length < 2) return null
+
+      return value
+    }
+
+    if (text.startsWith('/content')) {
+      const rawNiche = text.match(/niche:([^\s]+)/i)?.[1]
+      const rawPlatform = text.match(/platform:([^\s]+)/i)?.[1]
+
+      const niche = normalizeNiche(rawNiche)
+      const platform = normalizePlatform(rawPlatform)
+
+      if (!niche) {
+        await execute({
+          instructions: `
+Réponds exactement avec ce message, sans rien ajouter :
+
+Niche invalide. Donne une niche claire d’au moins 2 caractères.
+Exemple : /content niche:fitness platform:instagram
+          `,
+        })
+        return
+      }
+
+      if (!platform) {
+        await execute({
+          instructions: `
+Réponds exactement avec ce message, sans rien ajouter :
+
+Plateforme non reconnue. Utilise : TikTok, Instagram, YouTube ou LinkedIn.
+Exemple : /content niche:fitness platform:instagram
+          `,
+        })
+        return
+      }
+
+      await execute({
+        instructions: `
+Tu es CreatorFlow AI, un assistant expert en stratégie de contenu.
+
+Tâche :
+Génère un content matrix de 2 semaines pour la niche "${niche}" sur ${platform}.
+
+Contraintes importantes :
+- Réponds en français.
+- Sois concret, crédible, moderne et utile.
+- Adapte vraiment les formats à ${platform}.
+- Évite les phrases bizarres, répétitives ou trop vagues.
+- Donne de vraies idées, pas des placeholders.
+
+Format de réponse obligatoire :
+
+CREATORFLOW_AI
+CONTENT MATRIX — ${niche.toUpperCase()} × ${platform.toUpperCase()}
+
+SEMAINE 1
+LUNDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+MERCREDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+VENDREDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+SEMAINE 2
+LUNDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+MERCREDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+VENDREDI
+Titre : ...
+Accroche : ...
+Format : ...
+
+Conseil de la semaine : ...
+
+La sortie doit être propre et directement montrable à un jury.
+        `,
       })
       return
     }
 
     if (text.startsWith('/hook')) {
-      const sujet = text.replace('/hook', '').replace(/sujet:/i, '').trim() || 'contenu général'
-      await client.createMessage({
-        conversationId: message.conversationId,
-        userId: message.userId,
-        payload: {
-          text: `Tu es CreatorFlow AI, expert en accroches virales.\nSujet : "${sujet}"\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ HOOK_CRACKER.exe\n[■■■■■■■■■■] ANALYZING: "${sujet}"\n> 5 VIRAL HOOKS EXTRACTED ✓\n\`\`\`\n\n🔥 HOOK DATABASE — "${sujet}"\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n[01] ◈ SHOCK PROTOCOL\n"[accroche choc]"\n→ WHY IT WORKS: [explication]\n\n[02] ◈ CURIOSITY EXPLOIT\n"[accroche curiosité]"\n→ WHY IT WORKS: [explication]\n\n[03] ◈ COUNTER_LOGIC HACK\n"[accroche contre-intuitive]"\n→ WHY IT WORKS: [explication]\n\n[04] ◈ STORY_INJECT\n"[accroche storytelling]"\n→ WHY IT WORKS: [explication]\n\n[05] ◈ DATA_BREACH\n"[accroche avec chiffre]"\n→ WHY IT WORKS: [explication]\n\n\`\`\`\n> BEST FOR TIKTOK  : [numéro]\n> BEST FOR YOUTUBE : [numéro]\n> PREDICTED CTR    : +[X]%\n\`\`\`\n\nRéponds en français.`
-        }
+      const sujet =
+        text.replace('/hook', '').replace(/sujet:/i, '').trim() || 'contenu général'
+
+      await execute({
+        instructions: `
+Tu es CreatorFlow AI, expert en hooks viraux.
+
+Sujet : "${sujet}"
+
+Donne 5 hooks en français.
+Ils doivent être naturels, modernes, crédibles et adaptés aux créateurs de contenu.
+
+Format obligatoire :
+1. Hook : ...
+   Pourquoi ça fonctionne : ...
+        `,
       })
       return
     }
 
     if (text.startsWith('/roast')) {
       const idee = text.replace('/roast', '').trim() || 'une idée banale'
-      await client.createMessage({
-        conversationId: message.conversationId,
-        userId: message.userId,
-        payload: {
-          text: `Tu es CreatorFlow AI en mode ROAST_SYSTEM.exe.\nIdée soumise : "${idee}"\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ ROAST_SYSTEM.exe\n[■■■■■■■■■■] SCANNING IDEA...\n> VULNERABILITIES FOUND: 3 ⚠️\n\`\`\`\n\n😬 VULNERABILITY REPORT\n━━━━━━━━━━━━━━━━━━━━━━━\n\n🔴 CRITICAL FLAWS DETECTED\n[ERR_01] [problème 1]\n[ERR_02] [problème 2]\n[ERR_03] [problème 3]\n\n\`\`\`\n> SYSTEM VERDICT: "[phrase drôle]"\n> CONTENT SCORE : [XX]/100 💀\n\`\`\`\n\n✅ PATCH AVAILABLE\n━━━━━━━━━━━━━━━━━━━━━━━\n\n[PATCH_01] 💡 [idée améliorée]\n[PATCH_02] 💡 [angle unique]\n[PATCH_03] 💡 [idée originale]\n\n\`\`\`\n> RECOMMENDED PATCH : [numéro]\n> NEW CONTENT SCORE : [XX]/100 ✅\n> REASON: [raison précise]\n\`\`\`\n\nRéponds en français.`
-        }
+
+      await execute({
+        instructions: `
+Tu es CreatorFlow AI en mode roast intelligent.
+
+Idée : "${idee}"
+
+Réponds en français.
+1. Fais un roast drôle mais pas insultant.
+2. Explique les 3 vrais problèmes de l’idée.
+3. Propose 3 améliorations concrètes.
+4. Termine par une recommandation claire.
+        `,
       })
       return
     }
 
     if (text.startsWith('/trend')) {
-      const niche = text.replace('/trend', '').replace(/niche:/i, '').trim() || 'général'
-      await client.createMessage({
-        conversationId: message.conversationId,
-        userId: message.userId,
-        payload: {
-          text: `Tu es CreatorFlow AI en mode TREND_SCANNER.exe.\nNiche : "${niche}"\n\nCommence EXACTEMENT comme ça :\n\`\`\`\n⚡ TREND_SCANNER.exe\n[■■■■■■■■■■] SCANNING: ${niche.toUpperCase()}\n> 3 TRENDS EXTRACTED ✓\n\`\`\`\n\n📡 TREND REPORT — ${niche.toUpperCase()}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n[TREND_01] 🔥 [tendance]\n→ POURQUOI ÇA BUZZ : [explication]\n→ VIDÉO #1 : [idée + titre]\n→ VIDÉO #2 : [idée + titre]\n→ FORMAT   : [Short / Reel / Long-form]\n\n[TREND_02] 🔥 [tendance]\n[même structure]\n\n[TREND_03] 🔥 [tendance]\n[même structure]\n\n\`\`\`\n> WINDOW OF OPPORTUNITY : [X] jours\n> SATURATION LEVEL      : [faible/moyen/élevé]\n> EXECUTE NOW           : [TREND_01/02/03]\n\`\`\`\n\nRéponds en français.`
-        }
+      const rawNiche = text.replace('/trend', '').replace(/niche:/i, '').trim()
+      const niche = normalizeNiche(rawNiche)
+
+      if (!niche) {
+        await execute({
+          instructions: `
+Réponds exactement avec ce message, sans rien ajouter :
+
+Niche invalide pour /trend. Donne une niche claire d’au moins 2 caractères.
+Exemple : /trend niche:gaming
+          `,
+        })
+        return
+      }
+
+      await execute({
+        instructions: `
+Tu es CreatorFlow AI en mode trend scanner.
+
+Niche : "${niche}"
+
+Donne 3 tendances en français avec :
+- le nom de la tendance
+- pourquoi ça buzz
+- 2 idées de vidéos
+- le format recommandé
+
+Important :
+- Si tu n’as pas de source temps réel branchée, reste prudent et formule les tendances comme des pistes crédibles, pas comme des faits garantis.
+- Sois clair, utile et structuré.
+        `,
       })
       return
     }
 
-    await client.createMessage({
-      conversationId: message.conversationId,
-      userId: message.userId,
-      payload: {
-        text: `\`\`\`\n⚡ CREATORFLOW_AI.exe ⚡\n[■■■■■■■■■■] 100%\n◈ SYSTEM READY ◈\n\`\`\`\n\`\`\`\nAVAILABLE COMMANDS:\n> /content niche:fitness platform:tiktok\n> /hook sujet:routine matinale\n> /roast je fais des vlogs quotidiens\n> /trend niche:gaming\n━━━━━━━━━━━━━━━━━━━━━━━━\nAWAITING INPUT... ▮\n\`\`\``
-      }
-    })
-  }
+    await send(`Commandes disponibles :
+/content niche:fitness platform:tiktok
+/hook sujet:routine matinale
+/roast je fais des vlogs quotidiens
+/trend niche:gaming`)
+  },
 })
