@@ -1,4 +1,4 @@
-import { z, defineConfig } from "@botpress/runtime";
+import { defineConfig } from "@botpress/runtime";
 
 export default defineConfig({
   name: "Izza",
@@ -8,15 +8,6 @@ export default defineConfig({
     autonomous: "cerebras:gpt-oss-120b",
     zai: "cerebras:gpt-oss-120b",
   },
-
-  bot: {
-    state: z.object({}),
-  },
-
-  user: {
-    state: z.object({}),
-  },
-
   dependencies: {
     integrations: {
       chat: { version: "chat@0.7.6", enabled: true },
